@@ -81,7 +81,6 @@ public class NavigationDeterminationScript : MonoBehaviour
             for (int ix = 0; ix < ixs.Length; ix++)
                 maze[ixs[ix]] = chars[ix];
             _mazes[i] = new NavDetMaze(maze.Join(""), i % 4, "ABCD"[i / 4]);
-            Debug.Log(_mazes[i].MazeWalls);
         }
         // END RULE SEED
 
