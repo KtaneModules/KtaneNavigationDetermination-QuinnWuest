@@ -97,7 +97,6 @@ public class NavigationDeterminationScript : MonoBehaviour
 
         var duplicatesRemoved = listOfPaths.Where(ndpa => listOfPaths.Count(ndpb => ndpb.Path.SequenceEqual(ndpa.Path)) == 1).ToArray();
         _chosenPath = duplicatesRemoved.PickRandom();
-        Debug.Log(_mazes[_chosenPath.MazeNum].MazeWalls);
         Debug.LogFormat("[Navigation Determination #{0}] Chosen maze: Color {1}, Label {2}.", _moduleId, _colorNames[_mazes[_chosenPath.MazeNum].Color], _mazes[_chosenPath.MazeNum].Label);
         Debug.LogFormat("[Navigation Determination #{0}] Target: {1}.", _moduleId, _chosenPath.SnChar);
         Debug.LogFormat("[Navigation Determination #{0}] Path: {1}", _moduleId, _chosenPath.Path.Select(i => "URDL"[i]).Join(" "));
