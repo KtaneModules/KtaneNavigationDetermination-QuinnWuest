@@ -41,7 +41,7 @@ public class NavigationDeterminationScript : MonoBehaviour
             Label = label;
         }
     }
-    private NavDetMaze[] _mazes = new NavDetMaze[16];
+    private readonly NavDetMaze[] _mazes = new NavDetMaze[16];
 
     public class NavDetPath
     {
@@ -248,6 +248,7 @@ public class NavigationDeterminationScript : MonoBehaviour
 
     private IEnumerator ProcessTwitchCommand(string command)
     {
+        command = command.Trim().ToLowerInvariant();
         var m = Regex.Match(command, @"^\s*play\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
         if (m.Success)
         {
@@ -263,17 +264,14 @@ public class NavigationDeterminationScript : MonoBehaviour
         m = Regex.Match(command, @"^\s*(?:submit|press)\s+(?<letter>[ABCD])\s+(?<color>r|red|y|yellow|g|green|b|blue)\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
         if (m.Success)
         {
-            var letter = m.Groups["letter"].Value.ToLowerInvariant();
+            var letter = m.Groups["letter"].Value.ToUpperInvariant();
             var color = "rygb".IndexOf(m.Groups["color"].Value.ToLowerInvariant()[0]);
-            while (_isAnimating)
+            if (_isAnimating)
             {
-                yield return null;
-                if (_currentlyPointedAtColor == color)
-                {
-                    ButtonSels[Array.IndexOf(_btnLetters, letter)].OnInteract();
-                    yield break;
-                }
+                yield return "sendtochaterror The sequence is already playing!";
+                yield break;
             }
+            yield return null;
             DisplaySel.OnInteract();
             yield return new WaitForSeconds(0.1f);
             while (_isAnimating)
@@ -281,7 +279,9 @@ public class NavigationDeterminationScript : MonoBehaviour
                 yield return null;
                 if (_currentlyPointedAtColor == color)
                 {
-                    ButtonSels[Array.IndexOf(_btnLetters, letter)].OnInteract();
+                    var ls = _btnLetters.Join("");
+                    var ix = ls.IndexOf(letter);
+                    ButtonSels[ix].OnInteract();
                     yield break;
                 }
             }
